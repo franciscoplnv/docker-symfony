@@ -40,11 +40,11 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash && apt install symfony-cli
 
 # Configuración adicional de PHP si es necesario
-RUN docker-php-ext-configure imap --with-imap --with-imap-ssl --with-kerberos \
-    && docker-php-ext-configure opcache --enable-opcache \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd imap intl mbstring mysqli pdo_mysql zip opcache bcmath sockets exif \
-    && docker-php-ext-enable imap intl mbstring mcrypt mysqli pdo_mysql zip opcache bcmath sockets exif 
+# RUN docker-php-ext-configure imap --with-imap --with-imap-ssl --with-kerberos \
+#     && docker-php-ext-configure opcache --enable-opcache \
+#     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+#     && docker-php-ext-install -j$(nproc) gd imap intl mbstring mysqli pdo_mysql zip opcache bcmath sockets exif \
+#     && docker-php-ext-enable imap intl mbstring mcrypt mysqli pdo_mysql zip opcache bcmath sockets exif 
 
 RUN a2enmod rewrite
 
