@@ -25,7 +25,6 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     libaspell-dev \
     libsnmp-dev \
-    libpcre3-dev \
     libtidy-dev \
     libonig-dev \
     libzip-dev
