@@ -1,5 +1,5 @@
 # Usa la imagen base de PHP con Apache
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 LABEL vendor="Symfony"
 LABEL maintainer="Francisco Piedras <francisco@lonuncavisto.com>"
