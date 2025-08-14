@@ -1,10 +1,8 @@
 services: 
   app:
-    image: franciscolnv/symfony-plnv:0.4
+    image: franciscolnv/symfony-plnv:0.5
     volumes:
       - www:/var/www/html
-    command: sleep infinity
-    network_mode: service:db
 
   db:
     image: mariadb:10.11.5
