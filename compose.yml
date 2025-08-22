@@ -1,8 +1,10 @@
-services: 
+services:
   app:
-    image: franciscolnv/symfony-plnv:0.5
+    image: franciscolnv/symfony-plnv:0.7
     volumes:
       - www:/var/www/html
+    depends_on:
+      - db
 
   db:
     image: mariadb:10.11.5
@@ -15,19 +17,6 @@ services:
       MYSQL_USER: mariadb
       MYSQL_PASSWORD: mariadb
 
-  dbTest:
-    image: mariadb:10.11.5
-    restart: unless-stopped
-    volumes:
-        - mariadbTest-data:/var/lib/mysql
-    environment:
-        MYSQL_ROOT_PASSWORD: mariadb
-        MYSQL_DATABASE: mariadb_test
-        MYSQL_USER: mariadb
-        MYSQL_PASSWORD: mariadb
-        PORT: 3307
-
 volumes:
   mariadb-data:
-  mariadbTest-data:
   www:

@@ -1,5 +1,5 @@
-# Usa la imagen base de PHP con Apache
-FROM php:8.3-apache
+# Usa la imagen base de PHP con CLI (mejor para CI)
+FROM php:8.3-cli
 
 LABEL vendor="Symfony"
 LABEL maintainer="Francisco Piedras <francisco@lonuncavisto.com>"
@@ -7,6 +7,8 @@ LABEL maintainer="Francisco Piedras <francisco@lonuncavisto.com>"
 # Instala las dependencias necesarias
 RUN apt-get update && apt-get install -y \
     git \
+    unzip \
+    mariadb-client \
     libpq-dev \
     libcurl4-gnutls-dev \
     libicu-dev \
@@ -27,38 +29,52 @@ RUN apt-get update && apt-get install -y \
     libsnmp-dev \
     libtidy-dev \
     libonig-dev \
-    libzip-dev
+    libzip-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-configure intl && docker-php-ext-install intl pdo pdo_mysql zip
+# Configura e instala extensiones PHP necesarias
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install -j$(nproc) \
+        intl \
+        pdo \
+        pdo_mysql \
+        zip \
+        gd \
+        opcache \
+        bcmath \
+        sockets \
+        exif
 
 # Instala Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Instala Xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+# Instala Xdebug con configuración específica para CI
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+# Configuración de PHP para CI/Testing
+RUN echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/ci-memory.ini \
+    && echo "default_socket_timeout = 60" > /usr/local/etc/php/conf.d/ci-timeout.ini \
+    && echo "mysql.connect_timeout = 60" > /usr/local/etc/php/conf.d/ci-mysql.ini
+
+# Configuración de Xdebug para coverage
+RUN echo "xdebug.mode = coverage" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Instala Symfony CLI
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash && apt install symfony-cli
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
+    && apt-get update \
+    && apt-get install -y symfony-cli \
+    && rm -rf /var/lib/apt/lists/*
 
-# Configuración adicional de PHP si es necesario
-# RUN docker-php-ext-configure imap --with-imap --with-imap-ssl --with-kerberos \
-#     && docker-php-ext-configure opcache --enable-opcache \
-#     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-#     && docker-php-ext-install -j$(nproc) gd imap intl mbstring mysqli pdo_mysql zip opcache bcmath sockets exif \
-#     && docker-php-ext-enable imap intl mbstring mcrypt mysqli pdo_mysql zip opcache bcmath sockets exif 
-
-RUN a2enmod rewrite
-
-# Limpia la lista de paquetes y los archivos temporales
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Configura el servidor Apache si es necesario
-# ...
-
+# Configuración de entorno
 ENV APP_ENV=test
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_CACHE_DIR=/tmp/composer-cache
 
 # Define el directorio de trabajo
 WORKDIR /var/www/html
 
-# Inicia el servidor Apache
-CMD ["apache2-foreground"]
+# Para CI no necesitamos Apache, solo CLI
+CMD ["php", "-v"]
