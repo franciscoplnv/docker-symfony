@@ -1,6 +1,10 @@
 # docker-symfony
 
 [![Test docker image](https://github.com/franciscoplnv/docker-symfony/actions/workflows/test-image.yml/badge.svg)](https://github.com/franciscoplnv/docker-symfony/actions/workflows/test-image.yml)
+[![Última release](https://img.shields.io/github/v/release/franciscoplnv/docker-symfony)](https://github.com/franciscoplnv/docker-symfony/releases/latest)
+[![Fecha release](https://img.shields.io/github/release-date/franciscoplnv/docker-symfony)](https://github.com/franciscoplnv/docker-symfony/releases/latest)
+
+Las badges superiores muestran el estado del workflow de pruebas y la versión/fecha del release más reciente.
 
 Proyecto base para desarrollo con Symfony usando Docker Compose y MariaDB.
 
