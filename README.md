@@ -1,5 +1,7 @@
 # docker-symfony
 
+[![Test docker image](https://github.com/franciscoplnv/docker-symfony/actions/workflows/test-image.yml/badge.svg)](https://github.com/franciscoplnv/docker-symfony/actions/workflows/test-image.yml)
+
 Proyecto base para desarrollo con Symfony usando Docker Compose y MariaDB.
 
 ## Requisitos
@@ -63,6 +65,12 @@ La imagen se publica automáticamente en Docker Hub cuando se crea un **Release*
 ## Notas
 - La imagen personalizada se debe actualizar si cambias la versión de PHP o dependencias.
 - Usa el tag de release (`v0.9.0`, `v0.9.1`, etc.) para reflejar los últimos cambios.
+
+## Pruebas
+- `scripts/test-image.sh` carga `.env`, valida `docker compose config` y reconstruye la imagen usando `IMAGE_TAG` para garantizar que el pipeline reproduce el comportamiento local.
+- El workflow **Test docker image** ejecuta ese script en GitHub Actions automáticamente para pushes y PRs en `main`; el badge más arriba refleja su estado.
+## Pruebas
+- `scripts/test-image.sh` carga `.env`, valida `docker compose config` y reconstruye la imagen usando `IMAGE_TAG` para garantizar que el pipeline reproduce el comportamiento local.
 
 ---
 Autor: Francisco Piedras
