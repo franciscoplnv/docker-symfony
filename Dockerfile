@@ -1,5 +1,5 @@
 # Usa la imagen base de PHP con CLI (mejor para CI)
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 LABEL vendor="Symfony"
 LABEL maintainer="Francisco Piedras <francisco@lonuncavisto.com>"
