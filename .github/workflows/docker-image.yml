@@ -20,7 +20,17 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
-      
+     
+      - name: Load IMAGE_TAG from .env
+        id: load-image-tag
+        run: |
+          IMAGE_TAG=$(grep -E '^IMAGE_TAG=' .env | cut -d'=' -f2-)
+          if [ -z "$IMAGE_TAG" ]; then
+            echo 'IMAGE_TAG no se ha definido en .env' >&2
+            exit 1
+          fi
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2.1.0
         with:
@@ -38,5 +48,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            franciscolnv/symfony-plnv:${{ env.IMAGE_TAG }}
           labels: ${{ steps.meta.outputs.labels }}

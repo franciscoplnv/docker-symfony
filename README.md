@@ -13,9 +13,9 @@ Proyecto base para desarrollo con Symfony usando Docker Compose y MariaDB.
 
 ## Uso rápido
 
-1. Construye la imagen personalizada:
+1. Asegúrate de que `.env` define `IMAGE_TAG` (ej. `v0.9.0`) y luego construye la imagen personalizada:
    ```bash
-   docker build -t franciscolnv/symfony-plnv:0.9.0 .
+   docker build -t franciscolnv/symfony-plnv:${IMAGE_TAG} .
    ```
 
 2. Levanta los servicios:
@@ -43,6 +43,8 @@ Proyecto base para desarrollo con Symfony usando Docker Compose y MariaDB.
 - Edita `compose.yml` para agregar servicios o cambiar configuraciones.
 
 ## Versionado y publicación de la imagen
+
+Usamos `.env` para fijar el tag que se usa localmente y en los ejemplos (`IMAGE_TAG=v0.9.0`). La GitHub Action también lee ese archivo, así que actualiza `IMAGE_TAG` antes de construir o lanzar nuevos releases para garantizar que el pipeline y el entorno local publiquen exactamente la misma etiqueta.
 
 La imagen se publica automáticamente en Docker Hub cuando se crea un **Release** en GitHub.
 

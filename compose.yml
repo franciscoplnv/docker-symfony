@@ -1,6 +1,6 @@
 services:
   app:
-    image: franciscolnv/symfony-plnv:0.7
+    image: franciscolnv/symfony-plnv:${IMAGE_TAG}
     volumes:
       - www:/var/www/html
     depends_on:
